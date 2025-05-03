@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label>Fecha de Nacimiento:</label>
-                                    <input type="text" name="fechaNac" id="fechaNac" class="form-control" />
+                                    <input type="date" name="fechaNac" id="fechaNac" class="form-control" />
                                 </div>
                                 <div class="mb-3">
                                     <label>Semestre</label>
@@ -161,6 +161,7 @@
 						<td>${row.primerAp}</td>
                         <td>${row.segundoAp}</td>
 						<td>
+      							<button type="button" class="btn btn-info btn-sm" onclick="verDetalle('${row._id}')">Detalle</button>
 							<button type="button" class="btn btn-warning btn-sm" onclick="detalle('${row._id}')">Editar</button>
 							<button type="button" class="btn btn-danger btn-sm" onclick="eliminar('${row._id}')">Eliminar</button>
 						</td>
@@ -194,6 +195,38 @@
 			document.getElementById('alumno_id').value = data._id;
 		});
 	}
+function verDetalle(id) {
+    fetch(`/alumnos/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        let html = `
+        <div class="modal" tabindex="-1" id="detalleModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalle del Alumno</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Num. Control:</strong> ${data.numControl}</p>
+                        <p><strong>Nombre:</strong> ${data.nombre}</p>
+                        <p><strong>Primer Apellido:</strong> ${data.primerAp}</p>
+                        <p><strong>Segundo Apellido:</strong> ${data.segundoAp}</p>
+                        <p><strong>Fecha de Nacimiento:</strong> ${data.fechaNac}</p>
+                        <p><strong>Semestre:</strong> ${data.semestre}</p>
+                        <p><strong>Carrera:</strong> ${data.carrera}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        document.getElementById('modalArea').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('detalleModal')).show();
+    });
+}
 
 	function modificar(){
 		let formElement = document.getElementById('alumnoform');
